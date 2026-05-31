@@ -17,6 +17,8 @@ const clearBtn = document.getElementById("clear-button");
 
 let selectedUser;
 
+// eventListeners
+
 clearBtn.addEventListener("click", function () {
   if (!selectedUser) {
     contentSection.innerHTML = "<p>Select a user.</p>";
@@ -34,7 +36,7 @@ form.addEventListener("submit", function (e) {
   const repetitionSpacesDates = calculateDates(repetitionSpaces);
   addData(selectedUser, { [topic]: repetitionSpacesDates });
 
-  renderAgendas(userAgendas);
+  renderAgendas();
 });
 
 userSelect.addEventListener("change", function (e) {
@@ -49,16 +51,38 @@ userSelect.addEventListener("change", function (e) {
   content.classList.remove("hidden");
 });
 
+// functions
 function renderAgendas() {
   const userAgendas = getData(selectedUser);
   if (!userAgendas) {
     contentSection.textContent = "No agenda to display.";
     return;
   }
-  userAgendas.forEach((agenda) => console.log(agenda));
+
+  // turns {topic:[date1,date2]} into [{topic,date1},{topic,date2}]
+  const agendaDatePairs = [];
+  userAgendas.forEach((agenda) => {
+    for (let [topic, dates] of Object.entries(agenda)) {
+      dates.forEach((date) => agendaDatePairs.push({ topic, date }));
+    }
+  });
+
+  agendaDatePairs.sort((a, b) => a.date.localeCompare(b.date));
+
+  const paragraphs = agendaDatePairs.map((agenda) => {
+    const p = document.createElement("p");
+    p.textContent = `${agenda.topic} : ${agenda.date}`;
+
+    return p;
+  });
+
+  contentSection.append(...paragraphs);
 }
 
-// Functions
+function createAgendaDatePairs(userAgendas) {}
+
+function sortAgendaDatePairs(agendaDatePairs) {}
+
 function populateUsersDropDown(list) {
   const options = list.map((l) => {
     const option = document.createElement("option");
