@@ -11,11 +11,13 @@
         <section id="content-section" class="content-section"></section>
         <form id="topic-form" action="#">
           <label for="topic">Add new topic</label>
-          <input type="text" id="topic" class="topic" />
-          <input type="date" id="date" />
+          <input name="topic" type="text" id="topic" class="topic" required />
+          <input name="date" type="date" id="date" required />
           <button type="submit">Add</button>
+          <button type="reset">Reset</button>
         </form>
       </div>
+      <button type="submit" id="clear-button">Clear</button>
     </main>
   </body>
 </html>
