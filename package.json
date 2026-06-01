@@ -2,6 +2,9 @@
   "name": "project-spaced-repetition",
   "version": "1.0.0",
   "scripts": {
-    "test": "node common.test.mjs"
+    "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js"
+  },
+  "devDependencies": {
+    "jest": "^30.4.2"
   }
 }

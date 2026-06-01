@@ -5,6 +5,11 @@
 // You can't open the index.html file using a file:// URL.
 
 import { getUserIds } from "./common.mjs";
+import {
+  calculateSpaces,
+  formatReadableDate,
+  formatOrdinalDay,
+} from "./utils/utils.mjs";
 import { addData, clearData, getData } from "./storage.mjs";
 
 const userSelect = document.getElementById("user-select");
@@ -33,10 +38,8 @@ form.addEventListener("submit", function (e) {
 
   const topic = topicInput.value;
   const date = dateInput.value;
-  const repetitionSpaces = calculateSpaces(date);
-
-  // extracting only dates part of the date object
-  const repetitionSpacesDates = calculateDates(repetitionSpaces);
+  // calculates revision dates and returns only dates
+  const repetitionSpacesDates = calculateSpaces(date);
 
   addData(userId, { [topic]: repetitionSpacesDates });
 
@@ -79,7 +82,8 @@ function renderAgendas() {
 
   const paragraphs = agendaDatePairs.map((agenda) => {
     const p = document.createElement("p");
-    p.textContent = `${agenda.topic} : ${agenda.date}`;
+    const readableDate = formatReadableDate(agenda.date);
+    p.textContent = `${agenda.topic} : ${readableDate}`;
 
     return p;
   });
@@ -105,30 +109,12 @@ function setDefaultInputDate() {
   dateInput.defaultValue = todayDate;
 }
 
-function calculateSpaces(date) {
-  const spaces = [
-    { days: 7 },
-    { months: 1 },
-    { months: 3 },
-    { months: 6 },
-    { year: 1 },
-  ];
-  return spaces.map((space) => {
-    const base = new Date(date);
-    if (space.days) base.setDate(base.getDate() + space.days);
-    if (space.months) base.setMonth(base.getMonth() + space.months);
-    if (space.year) base.setFullYear(base.getFullYear() + space.year);
-
-    return base;
-  });
-}
-
-function calculateDates(repetitionSpaces) {
-  return repetitionSpaces.map((space) => space.toISOString().split("T")[0]);
-}
-
 document.addEventListener("DOMContentLoaded", function () {
+  const navigation = performance.getEntriesByType("navigation")[0];
   const users = getUserIds();
+  // makes sure on first load storage is empty
+  if (navigation.type === "navigate") users.forEach((user) => clearData(user));
+
   if (users.length === 0) {
     contentSection.textContent = "No user to display.";
     return;
