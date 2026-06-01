@@ -1,17 +1,20 @@
 <!doctype html>
-<html>
+<html lang="en">
   <head>
+    <title>Spaced Repetition</title>
     <link rel="stylesheet" href="style.css" />
     <script type="module" src="script.mjs"></script>
   </head>
   <body>
     <main>
+      <label for="user-select">Users:</label>
       <select id="user-select" class="user-select"></select>
       <div class="content hidden" id="content">
         <section id="content-section" class="content-section"></section>
         <form id="topic-form" action="#">
-          <label for="topic">Add new topic</label>
+          <label for="topic">Add new topic:</label>
           <input name="topic" type="text" id="topic" class="topic" required />
+          <label for="date">Date:</label>
           <input name="date" type="date" id="date" required />
           <button type="submit">Add</button>
           <button type="reset">Reset</button>
