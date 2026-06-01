@@ -15,26 +15,30 @@ const dateInput = document.getElementById("date");
 const content = document.getElementById("content");
 const clearBtn = document.getElementById("clear-button");
 
-let selectedUser;
-
 // eventListeners
 
 clearBtn.addEventListener("click", function () {
-  if (!selectedUser) {
+  const userId = userSelect.value;
+  if (!userId) {
     contentSection.innerHTML = "<p>Select a user.</p>";
     return;
   }
-  clearData(selectedUser);
+  clearData(userId);
+  renderAgendas();
 });
 
 form.addEventListener("submit", function (e) {
   e.preventDefault();
+  const userId = userSelect.value;
 
   const topic = topicInput.value;
   const date = dateInput.value;
   const repetitionSpaces = calculateSpaces(date);
+
+  // extracting only dates part of the date object
   const repetitionSpacesDates = calculateDates(repetitionSpaces);
-  addData(selectedUser, { [topic]: repetitionSpacesDates });
+
+  addData(userId, { [topic]: repetitionSpacesDates });
 
   renderAgendas();
 });
@@ -45,7 +49,7 @@ userSelect.addEventListener("change", function (e) {
     content.classList.add("hidden");
     return;
   }
-  selectedUser = userId;
+
   const userAgendas = getData(userId);
   renderAgendas(userAgendas);
   content.classList.remove("hidden");
@@ -53,19 +57,23 @@ userSelect.addEventListener("change", function (e) {
 
 // functions
 function renderAgendas() {
-  const userAgendas = getData(selectedUser);
+  const userId = userSelect.value;
+  contentSection.innerHTML = "";
+  const userAgendas = getData(userId);
   if (!userAgendas) {
     contentSection.textContent = "No agenda to display.";
     return;
   }
 
   // turns {topic:[date1,date2]} into [{topic,date1},{topic,date2}]
-  const agendaDatePairs = [];
-  userAgendas.forEach((agenda) => {
-    for (let [topic, dates] of Object.entries(agenda)) {
-      dates.forEach((date) => agendaDatePairs.push({ topic, date }));
-    }
-  });
+  const todayDate = new Date().toISOString().split("T")[0];
+  const agendaDatePairs = userAgendas.flatMap((agenda) =>
+    Object.entries(agenda).flatMap(([topic, dates]) =>
+      dates
+        .filter((date) => date >= todayDate)
+        .map((date) => ({ topic, date })),
+    ),
+  );
 
   agendaDatePairs.sort((a, b) => a.date.localeCompare(b.date));
 
@@ -78,10 +86,6 @@ function renderAgendas() {
 
   contentSection.append(...paragraphs);
 }
-
-function createAgendaDatePairs(userAgendas) {}
-
-function sortAgendaDatePairs(agendaDatePairs) {}
 
 function populateUsersDropDown(list) {
   const options = list.map((l) => {
@@ -98,7 +102,7 @@ function populateUsersDropDown(list) {
 
 function setDefaultInputDate() {
   const todayDate = new Date().toISOString().split("T")[0];
-  dateInput.value = todayDate;
+  dateInput.defaultValue = todayDate;
 }
 
 function calculateSpaces(date) {
