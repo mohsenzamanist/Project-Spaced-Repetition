@@ -1,3 +1,5 @@
+import { clearData } from "../storage.mjs";
+
 export function calculateSpaces(date) {
   const spaces = [
     { days: 7 },

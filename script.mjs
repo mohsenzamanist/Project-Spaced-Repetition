@@ -34,6 +34,7 @@ const formSubmitHandler = function (e) {
   const userId = userSelect.value;
   const topic = topicInput.value;
   const date = dateInput.value;
+  console.log(date);
 
   if (topic.trim() === "") {
     errorMsg.textContent = "Topic can not be empty.";
