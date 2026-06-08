@@ -1,15 +1,46 @@
 main {
   display: flex;
+  justify-content: center;
   align-items: flex-start;
-  gap: 2rem;
+  gap: 6rem;
+}
+.content{
+  display: flex;
+  flex-direction: column;
 }
 
 main div {
   display: flex;
-  ;
+  
   gap: 2rem;
+}
+
+.input-div, form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
 }
 
 .hidden {
   display: none;
+}
+
+button{
+  cursor: pointer;
+}
+
+#clear-button{
+  padding: 8px 16px;
+  border: 1px solid #ccc;
+  background-color: #eb1616;
+  color: #fff;
+  border-radius: 4px;
+}
+
+#clear-button:hover{
+  background-color: #ed6f6f;
+}
+
+.error-msg {
+  color:red
 }

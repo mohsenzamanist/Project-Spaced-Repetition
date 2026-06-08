@@ -51,3 +51,25 @@ export function formatOrdinalDay(day) {
             : "th";
   return `${n}${suffix}`;
 }
+
+export function emptyStorageOnFirstLoad(users) {
+  const navigation = performance.getEntriesByType("navigation")[0];
+  // makes sure on first load storage is empty
+  if (navigation.type === "navigate") users.forEach((user) => clearData(user));
+}
+
+export function flattenStoredAgendas(agendas) {
+  const todayDate = new Date().toISOString().split("T")[0];
+  // turns {topic:[date1,date2]} into [{topic,date1},{topic,date2}]
+  return agendas.flatMap((agenda) =>
+    Object.entries(agenda).flatMap(([topic, dates]) =>
+      dates
+        .filter((date) => date >= todayDate)
+        .map((date) => ({ topic, date })),
+    ),
+  );
+}
+
+export function sortFlattenedAgendas(agendas) {
+  return agendas.toSorted((a, b) => a.date.localeCompare(b.date));
+}

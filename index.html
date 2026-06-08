@@ -7,19 +7,24 @@
   </head>
   <body>
     <main>
-      <label for="user-select">Users:</label>
-      <select id="user-select" class="user-select"></select>
-      <section id="content-section" class="content-section"></section>
-      <div class="content hidden" id="content">
-        <form id="topic-form" action="#">
-          <label for="topic">Add new topic:</label>
-          <input name="topic" type="text" id="topic" class="topic" required />
-          <label for="date">Date:</label>
-          <input name="date" type="date" id="date" required />
-          <button type="submit">Add</button>
-          <button type="reset">Reset</button>
-        </form>
-        <button type="submit" id="clear-button">Clear</button>
+      <div class="content">
+        <div>
+          <label for="user-select">Users:</label>
+          <select id="user-select" class="user-select"></select>
+        </div>
+        <section id="content-section" class="content-section"></section>
+      </div>
+      <div class="input-div hidden" id="input">
+          <form action="#">
+            <label for="topic">Add new topic:</label>
+            <input name="topic" type="text" id="topic" class="topic" required />
+            <label for="date">Date:</label>
+            <input name="date" type="date" id="date" required />
+            <button type="submit">Add</button>
+            <button type="reset">Reset</button>
+          </form>
+          <button type="submit" id="clear-button">Clear user agendas</button>
+          <p class="error-msg"></p>
       </div>
     </main>
   </body>
