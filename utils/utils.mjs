@@ -1,5 +1,20 @@
 import { clearData } from "../storage.mjs";
 
+const MONTHS = [
+  "January",
+  "February",
+  "March",
+  "April",
+  "May",
+  "June",
+  "July",
+  "August",
+  "September",
+  "October",
+  "November",
+  "December",
+];
+
 export function calculateSpaces(date) {
   const spaces = [
     { days: 7 },
@@ -20,22 +35,9 @@ export function calculateSpaces(date) {
 
 export function formatReadableDate(date) {
   const [year, month, day] = date.split("-");
-  const months = [
-    "January",
-    "February",
-    "March",
-    "April",
-    "May",
-    "June",
-    "July",
-    "August",
-    "September",
-    "October",
-    "November",
-    "December",
-  ];
+
   const ordinalDay = formatOrdinalDay(day);
-  const monthName = months[Number(month) - 1];
+  const monthName = MONTHS[Number(month) - 1];
   return `${ordinalDay} ${monthName} ${year}`;
 }
 
@@ -56,13 +58,15 @@ export function formatOrdinalDay(day) {
 
 export function emptyStorageOnFirstLoad(users) {
   const navigation = performance.getEntriesByType("navigation")[0];
-  // makes sure on first load storage is empty
+
+  // makes sure storage is empty on first load
   if (navigation.type === "navigate") users.forEach((user) => clearData(user));
 }
 
 export function flattenStoredAgendas(agendas) {
   const todayDate = new Date().toISOString().split("T")[0];
   // turns {topic:[date1,date2]} into [{topic,date1},{topic,date2}]
+  // also filters out out-dated dates
   return agendas.flatMap((agenda) =>
     Object.entries(agenda).flatMap(([topic, dates]) =>
       dates

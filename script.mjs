@@ -3,7 +3,6 @@ import { addData, clearData, getData } from "./storage.mjs";
 import {
   calculateSpaces,
   formatReadableDate,
-  formatOrdinalDay,
   emptyStorageOnFirstLoad,
   flattenStoredAgendas,
   sortFlattenedAgendas,
@@ -12,7 +11,6 @@ import {
 const userSelect = document.getElementById("user-select");
 const contentSection = document.getElementById("content-section");
 const form = document.querySelector("form");
-const topicInput = document.getElementById("topic");
 const dateInput = document.getElementById("date");
 const inputDiv = document.querySelector(".input-div");
 const clearBtn = document.getElementById("clear-button");
@@ -31,16 +29,16 @@ const clearButtonHandler = function () {
 
 const formSubmitHandler = function (e) {
   e.preventDefault();
+  const formData = new FormData(form);
   const userId = userSelect.value;
-  const topic = topicInput.value;
-  const date = dateInput.value;
-  console.log(date);
+  const { topic, date } = Object.fromEntries(formData);
 
   if (topic.trim() === "") {
     errorMsg.textContent = "Topic can not be empty.";
     return;
   }
   errorMsg.textContent = "";
+
   // calculates revision dates and returns only dates
   const repetitionSpacesDates = calculateSpaces(date);
 
@@ -60,11 +58,12 @@ const userSelectChangeHandler = function (e) {
   const userId = e.target.value;
   if (!userId) {
     inputDiv.classList.add("hidden");
+    contentSection.textContent = "";
     return;
   }
 
-  renderAgendas();
   inputDiv.classList.remove("hidden");
+  renderAgendas();
 };
 
 // eventListeners
@@ -102,7 +101,7 @@ function renderAgendas() {
 }
 
 function resetFormInputs() {
-  topicInput.value = "";
+  form.reset();
   setDefaultInputDate();
 }
 
