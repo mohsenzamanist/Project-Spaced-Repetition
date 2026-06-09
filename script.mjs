@@ -3,7 +3,6 @@ import { addData, clearData, getData } from "./storage.mjs";
 import {
   calculateSpaces,
   formatReadableDate,
-  emptyStorageOnFirstLoad,
   flattenStoredAgendas,
   sortFlattenedAgendas,
 } from "./utils/utils.mjs";
@@ -31,7 +30,8 @@ const formSubmitHandler = function (e) {
   e.preventDefault();
   const formData = new FormData(form);
   const userId = userSelect.value;
-  const { topic, date } = Object.fromEntries(formData);
+  const topic = formData.get("topic");
+  const date = formData.get("date");
 
   const trimmedTopic = topic.trim();
   if (!trimmedTopic) {
@@ -51,6 +51,7 @@ const formSubmitHandler = function (e) {
 
 const formResetHandler = function () {
   setTimeout(setDefaultInputDate, 0);
+  errorMsg.textContent = "";
 };
 
 const userSelectChangeHandler = function (e) {
@@ -123,7 +124,6 @@ document.addEventListener("DOMContentLoaded", function () {
     return;
   }
 
-  emptyStorageOnFirstLoad(users);
   populateUsersDropDown(users);
   setDefaultInputDate();
 });

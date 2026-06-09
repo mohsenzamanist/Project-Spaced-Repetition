@@ -56,13 +56,6 @@ export function formatOrdinalDay(day) {
   return `${n}${suffix}`;
 }
 
-export function emptyStorageOnFirstLoad(users) {
-  const navigation = performance.getEntriesByType("navigation")[0];
-
-  // makes sure storage is empty on first load
-  if (navigation.type === "navigate") users.forEach((user) => clearData(user));
-}
-
 export function flattenStoredAgendas(agendas) {
   const todayDate = new Date().toISOString().split("T")[0];
   // turns {topic:[date1,date2]} into [{topic,date1},{topic,date2}]
