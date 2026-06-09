@@ -10,7 +10,7 @@ import {
 
 const userSelect = document.getElementById("user-select");
 const contentSection = document.getElementById("content-section");
-const form = document.querySelector("form");
+const form = document.getElementById("agenda-form");
 const dateInput = document.getElementById("date");
 const inputDiv = document.querySelector(".input-div");
 const clearBtn = document.getElementById("clear-button");
@@ -20,7 +20,7 @@ const errorMsg = document.querySelector(".error-msg");
 const clearButtonHandler = function () {
   const userId = userSelect.value;
   if (!userId) {
-    contentSection.innerHTML = "<p>Select a user.</p>";
+    contentSection.textContent = "Select a user";
     return;
   }
   clearData(userId);
@@ -33,25 +33,24 @@ const formSubmitHandler = function (e) {
   const userId = userSelect.value;
   const { topic, date } = Object.fromEntries(formData);
 
-  if (topic.trim() === "") {
-    errorMsg.textContent = "Topic can not be empty.";
+  const trimmedTopic = topic.trim();
+  if (!trimmedTopic) {
+    errorMsg.textContent = "Topic cannot be empty.";
     return;
   }
   errorMsg.textContent = "";
 
   // calculates revision dates and returns only dates
-  const repetitionSpacesDates = calculateSpaces(date);
+  const revisionDates = calculateSpaces(date);
 
-  addData(userId, { [topic]: repetitionSpacesDates });
-  resetFormInputs();
+  addData(userId, { [trimmedTopic]: revisionDates });
+  form.reset();
 
   renderAgendas();
 };
 
 const formResetHandler = function () {
-  setTimeout(() => {
-    setDefaultInputDate();
-  }, 0);
+  setTimeout(setDefaultInputDate, 0);
 };
 
 const userSelectChangeHandler = function (e) {
@@ -78,7 +77,7 @@ userSelect.addEventListener("change", userSelectChangeHandler);
 // functions
 function renderAgendas() {
   const userId = userSelect.value;
-  contentSection.innerHTML = "";
+  contentSection.textContent = "";
   const userAgendas = getData(userId) || [];
   if (userAgendas.length === 0) {
     contentSection.textContent = "No agenda to display.";
@@ -100,11 +99,6 @@ function renderAgendas() {
   contentSection.append(...paragraphs);
 }
 
-function resetFormInputs() {
-  form.reset();
-  setDefaultInputDate();
-}
-
 function populateUsersDropDown(list) {
   const options = list.map((l) => {
     const option = document.createElement("option");
@@ -123,7 +117,7 @@ function setDefaultInputDate() {
 }
 
 document.addEventListener("DOMContentLoaded", function () {
-  const users = getUserIds() || [];
+  const users = getUserIds();
   if (users.length === 0) {
     contentSection.textContent = "No user to display.";
     return;
