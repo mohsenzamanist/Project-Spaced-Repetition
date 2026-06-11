@@ -86,6 +86,10 @@ function renderAgendas() {
   }
 
   const flattenedAgendas = flattenStoredAgendas(userAgendas);
+  if (flattenedAgendas.length === 0) {
+    contentSection.textContent = "No upcoming review dates.";
+    return;
+  }
 
   const sortedAgendas = sortFlattenedAgendas(flattenedAgendas);
 
